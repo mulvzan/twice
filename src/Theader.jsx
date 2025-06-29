@@ -1,5 +1,4 @@
 import { useState } from "react";
-import {  MailOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { Menu } from "antd";
 const items = [
