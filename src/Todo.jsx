@@ -79,6 +79,7 @@ const Todo = () => {
               />
               <span>{todo.title}</span>
               <Button
+                danger
                 onClick={() => {
                   setTodos(todos.filter((item) => item.id !== todo.id));
                 }}
