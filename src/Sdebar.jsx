@@ -64,11 +64,11 @@ const Tsidebar = () => {
 
   return (
     <Menu
-      style={{ width: 223 }}
       selectedKeys={selectedKeys}
       mode="inline"
       items={items}
       onClick={handleMenuClick}
+ 
     />
   );
 };

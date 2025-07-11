@@ -5,8 +5,11 @@ import { Outlet } from "react-router-dom";
 function App() {
   return (
     <div className="h-screen flex ">
-      <Tsidebar />
-      <div className="bg-gray-100 w-full">
+      <div className="w-64  flex-1/3 shadow-md">
+        <Tsidebar />
+      </div>
+
+      <div className=" w-full bg-gray-50">
         <Outlet />
       </div>
     </div>
