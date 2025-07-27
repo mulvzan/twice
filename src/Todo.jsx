@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, Button, Input, Checkbox } from "antd";
+import { Card, Button, Input, Checkbox, message } from "antd";
 
 const tos = [
   {
@@ -15,8 +15,13 @@ const tos = [
 ];
 
 const Todo = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const info = (action) => {
+    messageApi.info(action);
+  };
   const [todos, setTodos] = useState(tos);
   const [inputValue, setInputValue] = useState("");
+  const [nextId, setNextId] = useState(3); // 用于生成唯一ID
   return (
     <div className="h-full flex  justify-center">
       <div className="mt-10 h-fit flex flex-col items-center shadow-lg">
@@ -34,7 +39,9 @@ const Todo = () => {
                   }}
                 />
               </div>
-              <Button type="primary"
+              {contextHolder}
+              <Button
+                type="primary"
                 onClick={() => {
                   if (!inputValue.trim()) {
                     return;
@@ -43,11 +50,13 @@ const Todo = () => {
                   setTodos([
                     ...todos,
                     {
-                      id: todos.length + 1,
+                      id: nextId,
                       title: inputValue,
                       done: false,
                     },
                   ]);
+                  setNextId(nextId + 1); // 更新下一个可用ID 全+
+                  info("添加成功");
                   setInputValue("");
                 }}
               >
@@ -79,10 +88,12 @@ const Todo = () => {
                   checked={todo.done}
                 />
                 <span>{todo.title}</span>
+                {contextHolder}
                 <Button
                   danger
                   onClick={() => {
                     setTodos(todos.filter((item) => item.id !== todo.id));
+                    info("删除成功");
                   }}
                 >
                   删除

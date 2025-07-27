@@ -9,7 +9,7 @@ function App() {
         <Tsidebar />
       </div>
 
-      <div className=" w-full bg-gray-50">
+      <div className=" w-full">
         <Outlet />
       </div>
     </div>
