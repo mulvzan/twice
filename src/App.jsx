@@ -1,11 +1,11 @@
 import "./App.css";
-import Tsidebar from "./Sdebar";
+import Tsidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <div className="h-screen flex ">
-      <div className="w-64  flex-1/3 shadow-md">
+      <div className="w-max-32 flex-1/3  shadow-md">
         <Tsidebar />
       </div>
 

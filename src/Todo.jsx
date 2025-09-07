@@ -21,7 +21,7 @@ const Todo = () => {
   };
   const [todos, setTodos] = useState(tos);
   const [inputValue, setInputValue] = useState("");
-  const [nextId, setNextId] = useState(3); // 用于生成唯一ID
+  const [nextId, setNextId] = useState(tos.length + 1); // 用于生成唯一ID
   return (
     <div className="h-full flex  justify-center">
       <div className="mt-10 h-fit flex flex-col items-center shadow-lg">

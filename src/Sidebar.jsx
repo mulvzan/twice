@@ -32,7 +32,7 @@ const menuItems = [
   },
 ];
 
-const Tsidebar = () => {
+const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -66,4 +66,4 @@ const Tsidebar = () => {
     />
   );
 };
-export default Tsidebar;
+export default Sidebar;

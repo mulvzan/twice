@@ -50,7 +50,7 @@ const Dashboard = () => {
           />
         </div>
         <div
-          className="flex gap-2"
+          className="flex gap-8"
           style={{
             justifyContent:
               alignItems === "start"
