@@ -1,8 +1,6 @@
 import "./App.css";
 import Tsidebar from "./Sidebar";
 import {
-  AppstoreOutlined,
-  MailOutlined,
   CheckOutlined,
   SettingOutlined,
   RocketOutlined,
@@ -10,12 +8,14 @@ import {
   UserOutlined,
   SmileOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Space } from "antd";
+import { Dropdown } from "antd";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { Avatar, Menu } from "antd";
-const dropdownItems = [
+import type { MenuProps } from "antd";
+
+const dropdownItems: MenuProps['items'] = [
   {
     key: "1",
     icon: <SettingOutlined />,
@@ -35,12 +35,11 @@ const dropdownItems = [
     label: <Link to="/login">Logout</Link>,
   },
 ];
-const menuItems = [
+const menuItems: MenuProps['items'] = [
   {
     key: "/",
     label: "Todo",
     icon: <CheckOutlined />,
-    path: "/",
   },
   {
     type: "divider",
@@ -50,27 +49,24 @@ const menuItems = [
     key: "/about",
     label: "About",
     icon: <SettingOutlined />,
-    path: "/about",
   },
-
   {
     key: "/dashboard",
     label: "Dashboard",
     icon: <RocketOutlined />,
-    path: "/dashboard",
   },
   {
     key: "/gpt",
     label: "GPT",
     icon: <SearchOutlined />,
-    path: "/gpt",
   },
 ];
-function App() {
+
+const App: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleMenuClick = ({ key }) => {
+  const handleMenuClick = ({ key }: { key: string }) => {
     navigate(key);
   };
 

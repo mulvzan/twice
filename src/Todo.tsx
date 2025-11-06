@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Card, Button, Input, Checkbox, message } from "antd";
 
-const tos = [
+// 定义 Todo 项的类型
+interface TodoItem {
+  id: number;
+  title: string;
+  done: boolean;
+}
+
+const tos: TodoItem[] = [
   {
     id: 1,
     title: "钱",
@@ -14,14 +21,14 @@ const tos = [
   },
 ];
 
-const Todo = () => {
+const Todo: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const info = (action) => {
+  const info = (action: string): void => {
     messageApi.info(action);
   };
-  const [todos, setTodos] = useState(tos);
-  const [inputValue, setInputValue] = useState("");
-  const [nextId, setNextId] = useState(tos.length + 1); // 用于生成唯一ID
+  const [todos, setTodos] = useState<TodoItem[]>(tos);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [nextId, setNextId] = useState<number>(tos.length + 1); // 用于生成唯一ID
   return (
     <div className="h-screen flex  justify-center">
       <div className="mt-10 h-fit flex flex-col items-center shadow-lg">
@@ -34,7 +41,7 @@ const Todo = () => {
                   type="text"
                   placeholder="请输入待办事项"
                   value={inputValue}
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setInputValue(e.target.value);
                   }}
                 />

@@ -6,13 +6,13 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
+import type { MenuProps } from "antd";
 
-const menuItems = [
+const menuItems: MenuProps['items'] = [
   {
     key: "/",
     label: "Todo",
     icon: <CheckOutlined />,
-    path: "/",
   },
   {
     type: "divider",
@@ -22,53 +22,34 @@ const menuItems = [
     key: "/about",
     label: "About",
     icon: <SettingOutlined />,
-    path: "/about",
   },
-
   {
     key: "/dashboard",
     label: "Dashboard",
     icon: <RocketOutlined />,
-    path: "/dashboard",
   },
   {
     key: "/gpt",
     label: "GPT",
     icon: <SearchOutlined />,
-    path: "/gpt",
   },
 ];
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleMenuClick = ({ key }) => {
+  const handleMenuClick = ({ key }: { key: string }) => {
     navigate(key);
   };
 
   const selectedKeys = [location.pathname];
 
-  const items = menuItems.map((item) => {
-    if (item.type === "divider") {
-      return {
-        type: "divider",
-        key: item.key,
-      };
-    }
-
-    return {
-      key: item.key,
-      icon: item.icon,
-      label: item.label,
-    };
-  });
-
   return (
     <Menu
       selectedKeys={selectedKeys}
       mode="inline"
-      items={items}
+      items={menuItems}
       onClick={handleMenuClick}
     />
   );

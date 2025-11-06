@@ -1,6 +1,6 @@
 import { Card } from "antd";
 
-const About = () => {
+const About: React.FC = () => {
   return (
     <div className=" mt-10 flex text-center flex-col items-center  h-screen">
       <Card className="">

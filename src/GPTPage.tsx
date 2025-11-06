@@ -1,10 +1,11 @@
 import { Button } from "antd";
 import { useState } from "react";
-const GPTPage = () => {
-  const [isRound, setIsRound] = useState(false);
+
+const GPTPage: React.FC = () => {
+  const [isRound, setIsRound] = useState<boolean>(false);
 
   return (
-    <div class="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen">
       <div
         className={`shadow-2xl w-70  mx-auto mt-20 p-4 flex items-center flex-col justify-center  bg-red-400 text-xl text-blue-600`}
       >

@@ -1,10 +1,15 @@
 import { Form, Card, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+interface LoginFormValues {
+  username: string;
+  password: string;
+}
+
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleLogin = (values) => {
+  const handleLogin = (values: LoginFormValues): void => {
     // 这里可以添加登录逻辑，比如验证用户名密码
     console.log("Login values:", values);
     navigate("/");

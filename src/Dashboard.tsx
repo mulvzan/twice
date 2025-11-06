@@ -1,7 +1,16 @@
-import { Segmented, Card, Table } from "antd";
+import { Segmented, Table } from "antd";
 import { Button } from "antd";
 import { useState } from "react";
-const dataSource = [
+import type { ColumnsType } from "antd/es/table";
+
+interface DataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+}
+
+const dataSource: DataType[] = [
   {
     key: "1",
     name: "胡彦斌",
@@ -16,7 +25,7 @@ const dataSource = [
   },
 ];
 
-const columns = [
+const columns: ColumnsType<DataType> = [
   {
     title: "姓名",
     dataIndex: "name",
@@ -34,8 +43,9 @@ const columns = [
   },
 ];
 
-const Dashboard = () => {
-  const [alignItems, setAlignItems] = useState("center"); // You can change this to "start", "end", etc. based on your needs
+const Dashboard: React.FC = () => {
+  const [alignItems, setAlignItems] = useState<"start" | "center" | "end">("center");
+
   return (
     <div className="mt-10 flex flex-col h-screen">
       <div>
@@ -43,7 +53,7 @@ const Dashboard = () => {
           value={alignItems}
           style={{ marginBottom: 8 }}
           options={["start", "center", "end"]}
-          onChange={(value) => {
+          onChange={(value: "start" | "center" | "end") => {
             setAlignItems(value);
           }}
         />
