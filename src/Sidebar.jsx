@@ -3,6 +3,7 @@ import {
   CheckOutlined,
   SettingOutlined,
   RocketOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 
@@ -32,10 +33,10 @@ const menuItems = [
   },
   {
     key: "/gpt",
-    label: "GPT Page",
-    icon: <RocketOutlined />,
+    label: "GPT",
+    icon: <SearchOutlined />,
     path: "/gpt",
-  }
+  },
 ];
 
 const Sidebar = () => {
