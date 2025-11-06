@@ -1,39 +1,20 @@
-import { useState } from "react";
-import { Card, Button, Input, Checkbox, message } from "antd";
+import { Card, Button, Input, Checkbox, message, Spin, Alert } from "antd";
 import { useForm, Controller } from "react-hook-form";
-
-// 定义 Todo 项的类型
-interface TodoItem {
-  id: number;
-  title: string;
-  done: boolean;
-}
+import { useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo } from "./hooks/useApi";
 
 // 定义表单数据类型
 interface TodoFormData {
   title: string;
 }
 
-const tos: TodoItem[] = [
-  {
-    id: 1,
-    title: "钱",
-    done: false,
-  },
-  {
-    id: 2,
-    title: "你好",
-    done: true,
-  },
-];
-
 const Todo: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const info = (action: string): void => {
-    messageApi.info(action);
-  };
-  const [todos, setTodos] = useState<TodoItem[]>(tos);
-  const [nextId, setNextId] = useState<number>(tos.length + 1);
+  
+  // React Query hooks
+  const { data: todos, isLoading, error } = useTodos();
+  const createTodoMutation = useCreateTodo();
+  const updateTodoMutation = useUpdateTodo();
+  const deleteTodoMutation = useDeleteTodo();
 
   // React Hook Form 设置
   const {
@@ -47,23 +28,57 @@ const Todo: React.FC = () => {
     }
   });
 
-  const onSubmit = (data: TodoFormData): void => {
+  const onSubmit = async (data: TodoFormData): Promise<void> => {
     if (!data.title.trim()) {
       return;
     }
 
-    setTodos([
-      ...todos,
-      {
-        id: nextId,
-        title: data.title.trim(),
-        done: false,
-      },
-    ]);
-    setNextId(nextId + 1);
-    info("添加成功");
-    reset(); // 重置表单
-  }; // 用于生成唯一ID
+    try {
+      await createTodoMutation.mutateAsync(data.title.trim());
+      messageApi.success("添加成功");
+      reset();
+    } catch (error) {
+      messageApi.error("添加失败，请重试");
+    }
+  };
+
+  const handleToggleTodo = async (id: number, done: boolean) => {
+    try {
+      await updateTodoMutation.mutateAsync({ id, updates: { done } });
+    } catch (error) {
+      messageApi.error("更新失败，请重试");
+    }
+  };
+
+  const handleDeleteTodo = async (id: number) => {
+    try {
+      await deleteTodoMutation.mutateAsync(id);
+      messageApi.success("删除成功");
+    } catch (error) {
+      messageApi.error("删除失败，请重试");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <Alert
+          message="加载失败"
+          description="无法加载待办事项，请刷新页面重试"
+          type="error"
+          showIcon
+        />
+      </div>
+    );
+  } // 用于生成唯一ID
   return (
     <div className="h-screen flex  justify-center">
       <div className="mt-10 h-fit flex flex-col items-center shadow-lg">
@@ -98,42 +113,31 @@ const Todo: React.FC = () => {
               <Button
                 type="primary"
                 htmlType="submit"
+                loading={createTodoMutation.isPending}
               >
-                添加
+                {createTodoMutation.isPending ? "添加中..." : "添加"}
               </Button>
             </form>
           </div>
 
           <ul>
-            {todos.map((todo) => (
+            {todos?.map((todo) => (
               <li
                 key={todo.id}
                 className="mb-2 flex justify-between items-center"
               >
                 <Checkbox
-                  onClick={() => {
-                    setTodos(
-                      todos.map((item) => {
-                        if (item.id === todo.id) {
-                          return {
-                            ...item,
-                            done: !item.done,
-                          };
-                        }
-                        return item;
-                      })
-                    );
-                  }}
                   checked={todo.done}
+                  onChange={(e) => handleToggleTodo(todo.id, e.target.checked)}
                 />
-                <span>{todo.title}</span>
+                <span className={todo.done ? "line-through text-gray-500" : ""}>
+                  {todo.title}
+                </span>
                 {contextHolder}
                 <Button
                   danger
-                  onClick={() => {
-                    setTodos(todos.filter((item) => item.id !== todo.id));
-                    info("删除成功");
-                  }}
+                  loading={deleteTodoMutation.isPending}
+                  onClick={() => handleDeleteTodo(todo.id)}
                 >
                   删除
                 </Button>

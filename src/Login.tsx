@@ -1,6 +1,7 @@
-import { Card, Input, Button } from "antd";
+import { Card, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
+import { useLogin } from "./hooks/useApi";
 
 interface LoginFormValues {
   username: string;
@@ -9,11 +10,13 @@ interface LoginFormValues {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const loginMutation = useLogin();
   
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm<LoginFormValues>({
     defaultValues: {
       username: "",
@@ -21,14 +24,23 @@ const Login: React.FC = () => {
     }
   });
 
-  const onSubmit = (data: LoginFormValues): void => {
-    console.log("Login values:", data);
-    // 这里可以添加登录逻辑，比如验证用户名密码
-    navigate("/");
+  const onSubmit = async (data: LoginFormValues): Promise<void> => {
+    try {
+      await loginMutation.mutateAsync(data);
+      messageApi.success("登录成功！");
+      
+      // 延迟导航，让用户看到成功消息
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    } catch (error) {
+      messageApi.error(error instanceof Error ? error.message : "登录失败，请重试");
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
+      {contextHolder}
       <Card className="w-[350px] text-center bg-white shadow-lg">
         <h1 className="mb-6">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -90,12 +102,17 @@ const Login: React.FC = () => {
             type="primary"
             htmlType="submit"
             block
-            loading={isSubmitting}
+            loading={loginMutation.isPending}
             className="mt-4"
           >
-            {isSubmitting ? "Logging in..." : "Login"}
+            {loginMutation.isPending ? "Logging in..." : "Login"}
           </Button>
         </form>
+        
+        <div className="mt-4 text-xs text-gray-500">
+          <p>测试账号: admin</p>
+          <p>测试密码: 123456</p>
+        </div>
       </Card>
     </div>
   );

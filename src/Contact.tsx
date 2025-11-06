@@ -1,5 +1,6 @@
 import { Card, Input, Button, message } from "antd";
 import { useForm, Controller } from "react-hook-form";
+import { useSendContactMessage } from "./hooks/useApi";
 
 interface ContactFormData {
   name: string;
@@ -9,12 +10,13 @@ interface ContactFormData {
 
 const Contact: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
+  const sendMessageMutation = useSendContactMessage();
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm<ContactFormData>({
     defaultValues: {
       name: "",
@@ -25,16 +27,11 @@ const Contact: React.FC = () => {
 
   const onSubmit = async (data: ContactFormData): Promise<void> => {
     try {
-      // 模拟 API 调用
-      console.log("Contact form data:", data);
-      
-      // 模拟延迟
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await sendMessageMutation.mutateAsync(data);
       messageApi.success("消息发送成功！");
       reset();
     } catch (error) {
-      messageApi.error("发送失败，请重试");
+      messageApi.error(error instanceof Error ? error.message : "发送失败，请重试");
     }
   };
 
@@ -126,10 +123,10 @@ const Contact: React.FC = () => {
             type="primary"
             htmlType="submit"
             block
-            loading={isSubmitting}
+            loading={sendMessageMutation.isPending}
             className="mt-6"
           >
-            {isSubmitting ? "发送中..." : "发送消息"}
+            {sendMessageMutation.isPending ? "发送中..." : "发送消息"}
           </Button>
         </form>
       </Card>
