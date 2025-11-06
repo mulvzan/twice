@@ -7,6 +7,7 @@ import {
   SearchOutlined,
   UserOutlined,
   SmileOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { Dropdown } from "antd";
 
@@ -49,6 +50,11 @@ const menuItems: MenuProps['items'] = [
     key: "/about",
     label: "About",
     icon: <SettingOutlined />,
+  },
+  {
+    key: "/contact",
+    label: "Contact",
+    icon: <MailOutlined />,
   },
   {
     key: "/dashboard",

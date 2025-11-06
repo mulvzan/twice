@@ -4,6 +4,7 @@ import {
   SettingOutlined,
   RocketOutlined,
   SearchOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import type { MenuProps } from "antd";
@@ -22,6 +23,11 @@ const menuItems: MenuProps['items'] = [
     key: "/about",
     label: "About",
     icon: <SettingOutlined />,
+  },
+  {
+    key: "/contact",
+    label: "Contact",
+    icon: <MailOutlined />,
   },
   {
     key: "/dashboard",

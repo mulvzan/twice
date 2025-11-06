@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Card, Button, Input, Checkbox, message } from "antd";
+import { useForm, Controller } from "react-hook-form";
 
 // 定义 Todo 项的类型
 interface TodoItem {
   id: number;
   title: string;
   done: boolean;
+}
+
+// 定义表单数据类型
+interface TodoFormData {
+  title: string;
 }
 
 const tos: TodoItem[] = [
@@ -27,49 +33,75 @@ const Todo: React.FC = () => {
     messageApi.info(action);
   };
   const [todos, setTodos] = useState<TodoItem[]>(tos);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [nextId, setNextId] = useState<number>(tos.length + 1); // 用于生成唯一ID
+  const [nextId, setNextId] = useState<number>(tos.length + 1);
+
+  // React Hook Form 设置
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<TodoFormData>({
+    defaultValues: {
+      title: ""
+    }
+  });
+
+  const onSubmit = (data: TodoFormData): void => {
+    if (!data.title.trim()) {
+      return;
+    }
+
+    setTodos([
+      ...todos,
+      {
+        id: nextId,
+        title: data.title.trim(),
+        done: false,
+      },
+    ]);
+    setNextId(nextId + 1);
+    info("添加成功");
+    reset(); // 重置表单
+  }; // 用于生成唯一ID
   return (
     <div className="h-screen flex  justify-center">
       <div className="mt-10 h-fit flex flex-col items-center shadow-lg">
         <Card>
           <div className="mb-4">
             <h1 className="mb-4 font-bold">待办事项</h1>
-            <div className="flex justify-center">
-              <div className="mr-4">
-                <Input
-                  type="text"
-                  placeholder="请输入待办事项"
-                  value={inputValue}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setInputValue(e.target.value);
+            <form onSubmit={handleSubmit(onSubmit)} className="flex justify-center gap-4">
+              <div className="flex-1">
+                <Controller
+                  name="title"
+                  control={control}
+                  rules={{
+                    required: "请输入待办事项",
+                    minLength: {
+                      value: 1,
+                      message: "待办事项不能为空"
+                    }
                   }}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="请输入待办事项"
+                      status={errors.title ? "error" : ""}
+                    />
+                  )}
                 />
+                {errors.title && (
+                  <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
+                )}
               </div>
               {contextHolder}
               <Button
                 type="primary"
-                onClick={() => {
-                  if (!inputValue.trim()) {
-                    return;
-                  }
-
-                  setTodos([
-                    ...todos,
-                    {
-                      id: nextId,
-                      title: inputValue,
-                      done: false,
-                    },
-                  ]);
-                  setNextId(nextId + 1); // 更新下一个可用ID 全+
-                  info("添加成功");
-                  setInputValue("");
-                }}
+                htmlType="submit"
               >
                 添加
               </Button>
-            </div>
+            </form>
           </div>
 
           <ul>
