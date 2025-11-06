@@ -2,8 +2,8 @@ import { Card } from "antd";
 
 const About = () => {
   return (
-    <div className="flex text-center flex-col items-center justify-center h-screen">
-      <Card>
+    <div className=" mt-10 flex text-center flex-col items-center  h-screen">
+      <Card className="">
         <div className="mb-4    ">
           <img
             src="https://pbs.twimg.com/profile_images/1640574015516594177/JHuG9Yl6_400x400.jpg"

@@ -30,6 +30,12 @@ const menuItems = [
     icon: <RocketOutlined />,
     path: "/dashboard",
   },
+  {
+    key: "/gpt",
+    label: "GPT Page",
+    icon: <RocketOutlined />,
+    path: "/gpt",
+  }
 ];
 
 const Sidebar = () => {
