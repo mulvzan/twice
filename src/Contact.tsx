@@ -36,11 +36,10 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center mt-10">
-      <Card className="w-full max-w-md">
+    <div className="flex mt-10 justify-center h-screen ">
+      <Card className="w-full  max-w-md">
         {contextHolder}
-        <h1 className="text-xl font-bold mb-6 text-center">联系我们</h1>
-        
+        <h1 className="text-xl font-bold mb-6 text-center ">联系我们</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-1">姓名</label>
