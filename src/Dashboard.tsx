@@ -1,7 +1,13 @@
-import { Segmented, Table } from "antd";
+import { Segmented, Spin, Alert, Table } from "antd";
 import { Button } from "antd";
 import { useState } from "react";
 import type { ColumnsType } from "antd/es/table";
+import {
+  useUserInfo,
+} from "./hooks/useApi";
+// import { useForm, Controller } from "react-hook-form";
+
+import type { UserInfo } from "./lib/api";
 
 interface DataType {
   key: string;
@@ -10,22 +16,22 @@ interface DataType {
   address: string;
 }
 
-const dataSource: DataType[] = [
-  {
-    key: "1",
-    name: "胡彦斌",
-    age: 32,
-    address: "西湖区湖底公园1号",
-  },
-  {
-    key: "2",
-    name: "胡彦祖",
-    age: 42,
-    address: "西湖区湖底公园1号",
-  },
-];
+// const dataSource: DataType[] = [
+//   {
+//     key: "1",
+//     name: "胡彦斌",
+//     age: 32,
+//     address: "西湖区湖底公园1号",
+//   },
+//   {
+//     key: "2",
+//     name: "胡彦祖",
+//     age: 42,
+//     address: "西湖区湖底公园1号",
+//   },
+// ];
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<UserInfo> = [
   {
     title: "姓名",
     dataIndex: "name",
@@ -45,6 +51,7 @@ const columns: ColumnsType<DataType> = [
 
 const Dashboard: React.FC = () => {
   const [alignItems, setAlignItems] = useState<"start" | "center" | "end">("center");
+  const { data: userinfos, isLoading, error } = useUserInfo();
 
   return (
     <div className="mt-10 flex flex-col h-screen">
@@ -65,8 +72,8 @@ const Dashboard: React.FC = () => {
             alignItems === "start"
               ? "flex-start"
               : alignItems === "end"
-              ? "flex-end"
-              : "center",
+                ? "flex-end"
+                : "center",
         }}
       >
         <Button size="middle" danger type="dashed">
@@ -83,8 +90,11 @@ const Dashboard: React.FC = () => {
         </Button>
       </div>
       <div className="  mx-2">
-        <Table dataSource={dataSource} columns={columns} />
+        {isLoading && <Spin />}
+        {error && <Alert message="加载失败" description={error.message} type="error" showIcon />}
+        <Table dataSource={userinfos} columns={columns} />
       </div>
+
     </div>
   );
 };

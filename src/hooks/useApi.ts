@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api, type Todo } from '../lib/api';
+import { api, type Todo, type UserInfo } from '../lib/api';
 
 // Query Keys - 用于缓存管理
 export const queryKeys = {
   todos: ['todos'] as const,
   user: (id: number) => ['user', id] as const,
+  userinfos: ['userinfos'] as const,
+
 };
 
 // Todo 相关 hooks
@@ -14,10 +16,16 @@ export const useTodos = () => {
     queryFn: api.getTodos,
   });
 };
+export const useUserInfo = () => {
+  return useQuery({
+    queryKey: queryKeys.userinfos,
+    queryFn: api.getUserInfos,
 
+  });
+};
 export const useCreateTodo = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: api.createTodo,
     onSuccess: (newTodo) => {
@@ -35,14 +43,14 @@ export const useCreateTodo = () => {
 
 export const useUpdateTodo = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ id, updates }: { id: number; updates: Partial<Todo> }) => 
+    mutationFn: ({ id, updates }: { id: number; updates: Partial<Todo> }) =>
       api.updateTodo(id, updates),
     onSuccess: (updatedTodo: Todo) => {
       // 更新缓存中的特定 Todo
       queryClient.setQueryData<Todo[]>(queryKeys.todos, (oldTodos) => {
-        return oldTodos?.map(todo => 
+        return oldTodos?.map(todo =>
           todo.id === updatedTodo.id ? updatedTodo : todo
         ) || [];
       });
@@ -55,7 +63,7 @@ export const useUpdateTodo = () => {
 
 export const useDeleteTodo = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: api.deleteTodo,
     onSuccess: (_, deletedId) => {
@@ -103,4 +111,7 @@ export const useSendContactMessage = () => {
       console.log('Contact message sent successfully');
     },
   });
-};
+
+
+
+};  

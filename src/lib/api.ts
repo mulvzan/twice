@@ -8,7 +8,12 @@ export interface User {
   email: string;
   avatar?: string;
 }
-
+export interface UserInfo {
+  key: number;
+  name: string;
+  age: number;
+  address: string;
+}
 export interface Todo {
   id: number;
   title: string;
@@ -50,6 +55,20 @@ let mockTodos: Todo[] = [
     createdAt: new Date().toISOString(),
   },
 ];
+let mockUserInfo: UserInfo[] = [
+  {
+    key: 1,
+    name: "admin",
+    age: 25,
+    address: "123 Main St",
+  },
+  {
+    key: 2,
+    name: "user",
+    age: 30,
+    address: "456 Elm St",
+  },
+];
 
 let nextTodoId = 3;
 
@@ -58,7 +77,7 @@ export const api = {
   // 认证相关
   login: async (credentials: LoginCredentials): Promise<LoginResponse> => {
     await delay(1000); // 模拟网络延迟
-    
+
     if (credentials.username === "admin" && credentials.password === "123456") {
       return {
         user: {
@@ -70,7 +89,7 @@ export const api = {
         token: "mock-jwt-token"
       };
     }
-    
+
     throw new Error("用户名或密码错误");
   },
 
@@ -80,9 +99,14 @@ export const api = {
     return [...mockTodos];
   },
 
+  getUserInfos: async (): Promise<UserInfo[]> => {
+    await delay(500);
+    return [...mockUserInfo];
+  },
+
   createTodo: async (title: string): Promise<Todo> => {
     await delay(300);
-    
+
     const newTodo: Todo = {
       id: nextTodoId++,
       title,
@@ -90,43 +114,43 @@ export const api = {
       userId: 1,
       createdAt: new Date().toISOString(),
     };
-    
+
     mockTodos.push(newTodo);
     return newTodo;
   },
 
   updateTodo: async (id: number, updates: Partial<Todo>): Promise<Todo> => {
     await delay(300);
-    
+
     const todoIndex = mockTodos.findIndex(todo => todo.id === id);
     if (todoIndex === -1) {
       throw new Error("Todo not found");
     }
-    
+
     mockTodos[todoIndex] = { ...mockTodos[todoIndex], ...updates };
     return mockTodos[todoIndex];
   },
 
   deleteTodo: async (id: number): Promise<void> => {
     await delay(300);
-    
+
     const todoIndex = mockTodos.findIndex(todo => todo.id === id);
     if (todoIndex === -1) {
       throw new Error("Todo not found");
     }
-    
+
     mockTodos.splice(todoIndex, 1);
   },
 
   // 联系表单
   sendContactMessage: async (message: ContactMessage): Promise<{ success: boolean }> => {
     await delay(1500);
-    
+
     // 模拟偶尔的失败
     if (Math.random() < 0.1) {
       throw new Error("发送失败，请稍后重试");
     }
-    
+
     console.log("Contact message sent:", message);
     return { success: true };
   },
@@ -134,7 +158,7 @@ export const api = {
   // 获取用户信息
   getUser: async (id: number): Promise<User> => {
     await delay(200);
-    
+
     return {
       id,
       username: "admin",
@@ -142,4 +166,7 @@ export const api = {
       avatar: "https://pbs.twimg.com/profile_images/1640574015516594177/JHuG9Yl6_400x400.jpg"
     };
   },
+
+
+  
 };
