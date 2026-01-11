@@ -2,6 +2,7 @@ import { Card, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { useLogin } from "./hooks/useApi";
+import { MESSAGES } from "./constants/messages";
 
 interface LoginFormValues {
   username: string;
@@ -12,7 +13,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const loginMutation = useLogin();
-  
+
   const {
     control,
     handleSubmit,
@@ -27,14 +28,14 @@ const Login: React.FC = () => {
   const onSubmit = async (data: LoginFormValues): Promise<void> => {
     try {
       await loginMutation.mutateAsync(data);
-      messageApi.success("登录成功！");
-      
+      messageApi.success(MESSAGES.AUTH.SUCCESS);
+
       // 延迟导航，让用户看到成功消息
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } catch (error) {
-      messageApi.error(error instanceof Error ? error.message : "登录失败，请重试");
+      messageApi.error(error instanceof Error ? error.message : MESSAGES.AUTH.ERROR);
     }
   };
 
@@ -51,7 +52,7 @@ const Login: React.FC = () => {
             <Controller
               name="username"
               control={control}
-              rules={{ 
+              rules={{
                 required: "Username is required",
                 minLength: {
                   value: 3,
@@ -78,7 +79,7 @@ const Login: React.FC = () => {
             <Controller
               name="password"
               control={control}
-              rules={{ 
+              rules={{
                 required: "Password is required",
                 minLength: {
                   value: 6,
@@ -108,7 +109,7 @@ const Login: React.FC = () => {
             {loginMutation.isPending ? "Logging in..." : "Login"}
           </Button>
         </form>
-        
+
         <div className="mt-4 text-xs text-gray-500">
           <p>测试账号: admin</p>
           <p>测试密码: 123456</p>

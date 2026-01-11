@@ -1,22 +1,45 @@
 import { Card, Button, Input, Checkbox, message, Spin, Alert } from "antd";
 import { useForm, Controller } from "react-hook-form";
-import {
-  useTodos,
-  useCreateTodo,
-  useUpdateTodo,
-  useDeleteTodo,
-} from "./hooks/useApi";
+import { useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo } from "./hooks/useApi";
+import { MESSAGES } from "./constants/messages";
 
 // 定义表单数据类型
 interface TodoFormData {
   title: string;
 }
 
+// 加载状态组件
+const TodoLoading = () => (
+  <div className="h-screen flex justify-center items-center">
+    <div className="text-center">
+      <Spin size="large" />
+      <p className="mt-4 text-gray-500">正在加载待办事项...</p>
+    </div>
+  </div>
+);
+
+// 错误状态组件
+const TodoError = ({ error, onRetry }: { error: Error; onRetry: () => void }) => (
+  <div className="h-screen flex justify-center items-center">
+    <Alert
+      message="加载失败"
+      description={error.message}
+      type="error"
+      showIcon
+      action={
+        <Button size="small" danger onClick={onRetry}>
+          重试
+        </Button>
+      }
+    />
+  </div>
+);
+
 const Todo: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   // React Query hooks
-  const { data: todos, isLoading, error } = useTodos();
+  const { data: todos, isLoading, error, refetch } = useTodos();
   const createTodoMutation = useCreateTodo();
   const updateTodoMutation = useUpdateTodo();
   const deleteTodoMutation = useDeleteTodo();
@@ -40,10 +63,10 @@ const Todo: React.FC = () => {
 
     try {
       await createTodoMutation.mutateAsync(data.title.trim());
-      messageApi.success("添加成功");
+      messageApi.success(MESSAGES.TODO.SUCCESS.CREATE);
       reset();
     } catch (error) {
-      messageApi.error("添加失败，请重试");
+      messageApi.error(MESSAGES.TODO.ERROR.CREATE);
     }
   };
 
@@ -52,57 +75,29 @@ const Todo: React.FC = () => {
       await updateTodoMutation.mutateAsync({ id, updates: { done } });
       messageApi.success(done ? "任务已完成" : "任务已重新开启");
     } catch (error) {
-      messageApi.error("更新失败，请重试");
+      messageApi.error(MESSAGES.TODO.ERROR.UPDATE);
     }
   };
 
   const handleDeleteTodo = async (id: number) => {
     try {
       await deleteTodoMutation.mutateAsync(id);
-      messageApi.success("删除成功");
+      messageApi.success(MESSAGES.TODO.SUCCESS.DELETE);
     } catch (error) {
-      messageApi.error("删除失败，请重试");
+      messageApi.error(MESSAGES.TODO.ERROR.DELETE);
     }
   };
 
   if (isLoading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <div className="text-center">
-          <Spin size="large" />
-          <p className="mt-4 text-gray-500">正在加载待办事项...</p>
-        </div>
-      </div>
-    );
+    return <TodoLoading />;
   }
 
   if (error) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <Alert
-          message="加载失败"
-          description={
-            error instanceof Error
-              ? error.message
-              : "无法加载待办事项，请刷新页面重试"
-          }
-          type="error"
-          showIcon
-          action={
-            <Button
-              size="small"
-              danger
-              onClick={() => window.location.reload()}
-            >
-              刷新页面
-            </Button>
-          }
-        />
-      </div>
-    );
-  } // 用于生成唯一ID
+    return <TodoError error={error} onRetry={refetch} />;
+  }
+
   return (
-    <div className="h-screen flex  justify-center">
+    <div className="h-screen flex justify-center">
       <div className="mt-10 h-fit flex flex-col items-center shadow-lg">
         <Card>
           <div className="mb-4">

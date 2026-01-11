@@ -8,8 +8,8 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import type { MenuProps } from "antd";
-
-const menuItems: MenuProps['items'] = [
+import { memo } from "react";
+const menuItems: MenuProps["items"] = [
   {
     key: "/",
     label: "Todo",
@@ -41,7 +41,7 @@ const menuItems: MenuProps['items'] = [
   },
 ];
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -59,5 +59,5 @@ const Sidebar: React.FC = () => {
       onClick={handleMenuClick}
     />
   );
-};
+});
 export default Sidebar;

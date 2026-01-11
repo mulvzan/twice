@@ -167,6 +167,11 @@ export const api = {
     };
   },
 
-
-  
+  // 添加统一错误处理
+  handleApiError: (error: unknown): string => {
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return '未知错误，请重试';
+  }
 };

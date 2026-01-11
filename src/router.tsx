@@ -1,26 +1,37 @@
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Todo from "./Todo";
-import App from "./App";
-import Dashboard from "./Dashboard";
-import Login from "./Login";
-import About from "./About";
-import Contact from "./Contact";
-import GPTPage from "./GPTPage";
+import { Spin } from "antd";
+
+const Todo = lazy(() => import("./Todo"));
+const App = lazy(() => import("./App"));
+const Dashboard = lazy(() => import("./Dashboard"));
+const Login = lazy(() => import("./Login"));
+const About = lazy(() => import("./About"));
+const Contact = lazy(() => import("./Contact"));
+const GPTPage = lazy(() => import("./GPTPage"));
 
 function Router() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<App />}>
-          <Route index element={<Todo />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/gpt" element={<GPTPage />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Route>
-      </Routes>
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center h-screen">
+            <Spin size="large" />
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<App />}>
+            <Route index element={<Todo />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/gpt" element={<GPTPage />} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

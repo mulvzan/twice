@@ -9,12 +9,6 @@ import {
 
 import type { UserInfo } from "./lib/api";
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
 
 // const dataSource: DataType[] = [
 //   {

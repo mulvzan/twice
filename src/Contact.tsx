@@ -1,6 +1,7 @@
 import { Card, Input, Button, message } from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { useSendContactMessage } from "./hooks/useApi";
+import { MESSAGES } from "./constants/messages";
 
 interface ContactFormData {
   name: string;
@@ -28,10 +29,10 @@ const Contact: React.FC = () => {
   const onSubmit = async (data: ContactFormData): Promise<void> => {
     try {
       await sendMessageMutation.mutateAsync(data);
-      messageApi.success("消息发送成功！");
+      messageApi.success(MESSAGES.CONTACT.SUCCESS);
       reset();
     } catch (error) {
-      messageApi.error(error instanceof Error ? error.message : "发送失败，请重试");
+      messageApi.error(error instanceof Error ? error.message : MESSAGES.CONTACT.ERROR);
     }
   };
 
