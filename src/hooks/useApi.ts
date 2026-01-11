@@ -1,12 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { api, type Todo, type UserInfo } from '../lib/api';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { api, type Todo, type UserInfo } from "../lib/api";
 
 // Query Keys - 用于缓存管理
 export const queryKeys = {
-  todos: ['todos'] as const,
-  user: (id: number) => ['user', id] as const,
-  userinfos: ['userinfos'] as const,
-
+  todos: ["todos"] as const,
+  user: (id: number) => ["user", id] as const,
+  userinfos: ["userinfos"] as const,
 };
 
 // Todo 相关 hooks
@@ -20,7 +19,6 @@ export const useUserInfo = () => {
   return useQuery({
     queryKey: queryKeys.userinfos,
     queryFn: api.getUserInfos,
-
   });
 };
 export const useCreateTodo = () => {
@@ -50,9 +48,11 @@ export const useUpdateTodo = () => {
     onSuccess: (updatedTodo: Todo) => {
       // 更新缓存中的特定 Todo
       queryClient.setQueryData<Todo[]>(queryKeys.todos, (oldTodos) => {
-        return oldTodos?.map(todo =>
-          todo.id === updatedTodo.id ? updatedTodo : todo
-        ) || [];
+        return (
+          oldTodos?.map((todo) =>
+            todo.id === updatedTodo.id ? updatedTodo : todo
+          ) || []
+        );
       });
     },
     onError: () => {
@@ -69,7 +69,7 @@ export const useDeleteTodo = () => {
     onSuccess: (_, deletedId) => {
       // 从缓存中移除已删除的 Todo
       queryClient.setQueryData<Todo[]>(queryKeys.todos, (oldTodos) => {
-        return oldTodos?.filter(todo => todo.id !== deletedId) || [];
+        return oldTodos?.filter((todo) => todo.id !== deletedId) || [];
       });
     },
     onError: () => {
@@ -84,11 +84,16 @@ export const useLogin = () => {
     mutationFn: api.login,
     onSuccess: (data) => {
       // 登录成功后可以缓存用户信息
-      console.log('Login successful:', data);
+      console.log("Login successful:", data);
       // 这里可以保存 token 到 localStorage 等
-      if (data && typeof data === 'object' && 'token' in data && 'user' in data) {
-        localStorage.setItem('token', data.token as string);
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (
+        data &&
+        typeof data === "object" &&
+        "token" in data &&
+        "user" in data
+      ) {
+        localStorage.setItem("token", data.token as string);
+        localStorage.setItem("user", JSON.stringify(data.user));
       }
     },
   });
@@ -108,10 +113,7 @@ export const useSendContactMessage = () => {
   return useMutation({
     mutationFn: api.sendContactMessage,
     onSuccess: () => {
-      console.log('Contact message sent successfully');
+      console.log("Contact message sent successfully");
     },
   });
-
-
-
-};  
+};

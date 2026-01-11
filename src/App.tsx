@@ -85,7 +85,7 @@ const App: React.FC = () => {
             <RocketOutlined /> Dislike
           </div>
         </a>
-        <h1 className="ml-4  "></h1>
+        <h1 className="ml-4"></h1>
         <div className="flex-1 flex">
           <div className="flex-1">
             <Menu
@@ -110,7 +110,7 @@ const App: React.FC = () => {
         </Dropdown>
       </div>
       <div className="flex mt-1">
-        <div className="w-max-15 flex-1/3  shadow-md">
+        <div className="w-70  shadow-md">
           <Tsidebar />
         </div>
 
