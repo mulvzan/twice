@@ -87,7 +87,7 @@ export const api = {
   },
 
   getUserInfos: async (): Promise<UserInfo[]> => {
-    const response = await fetch("http://localhost:3000/users");
+    const response = await fetch("/api/users");
     const data = await response.json();
     return data;
   },
