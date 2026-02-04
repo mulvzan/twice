@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo } from "react";
 import "./App.css";
 import Tsidebar from "./Sidebar";
 import {
@@ -17,7 +17,7 @@ import { Outlet } from "react-router-dom";
 import { Avatar, Menu } from "antd";
 import type { MenuProps } from "antd";
 
-const dropdownItems: MenuProps['items'] = [
+const dropdownItems: MenuProps["items"] = [
   {
     key: "1",
     icon: <SettingOutlined />,
@@ -37,7 +37,7 @@ const dropdownItems: MenuProps['items'] = [
     label: <Link to="/login">Logout</Link>,
   },
 ];
-const menuItems: MenuProps['items'] = [
+const menuItems: MenuProps["items"] = [
   {
     key: "/",
     label: "Todo",
@@ -121,6 +121,6 @@ const App: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default memo(App);
