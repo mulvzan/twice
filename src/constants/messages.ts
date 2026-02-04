@@ -17,7 +17,7 @@ export const MESSAGES = {
     ERROR: '登录失败，请重试',
   },
   CONTACT: {
-    SUCCESS: '消息发送成功！',
-    ERROR: '发送失败，请重试',
+    SUCCESS: '用户新增成功！',
+    ERROR: '用户新增失败，请重试',
   }
 } as const;

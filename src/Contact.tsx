@@ -1,38 +1,41 @@
 import { Card, Input, Button, message } from "antd";
 import { useForm, Controller } from "react-hook-form";
-import { useSendContactMessage } from "./hooks/useApi";
+import { useCreateUserInfo } from "./hooks/useApi";
 import { MESSAGES } from "./constants/messages";
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  message: string;
-}
+import type { UserInfo } from "./lib/api";
 
 const Contact: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const sendMessageMutation = useSendContactMessage();
+  const createUserInfoMutation = useCreateUserInfo();
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors }
-  } = useForm<ContactFormData>({
+
+    formState: { errors },
+  } = useForm<UserInfo>({
     defaultValues: {
       name: "",
-      email: "",
-      message: ""
-    }
+      age: 0,
+      address: "",
+    },
   });
 
-  const onSubmit = async (data: ContactFormData): Promise<void> => {
+  const onSubmit = async (data: UserInfo): Promise<void> => {
     try {
-      await sendMessageMutation.mutateAsync(data);
+      await createUserInfoMutation.mutateAsync({
+        name: data.name,
+        age: data.age,
+        address: data.address,
+      });
       messageApi.success(MESSAGES.CONTACT.SUCCESS);
       reset();
     } catch (error) {
-      messageApi.error(error instanceof Error ? error.message : MESSAGES.CONTACT.ERROR);
+      messageApi.error(
+        error instanceof Error ? error.message : MESSAGES.CONTACT.ERROR,
+      );
     }
   };
 
@@ -40,24 +43,24 @@ const Contact: React.FC = () => {
     <div className="flex mt-10 justify-center h-screen ">
       <Card className="w-full  max-w-md">
         {contextHolder}
-        <h1 className="text-xl font-bold mb-6 text-center ">联系我们</h1>
+        <h1 className="text-xl font-bold mb-6 text-center ">注册用户</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">姓名</label>
+            <label className="block text-sm font-medium mb-1">用户名</label>
             <Controller
               name="name"
               control={control}
               rules={{
-                required: "请输入姓名",
+                required: "请输入用户名",
                 minLength: {
-                  value: 2,
-                  message: "姓名至少2个字符"
-                }
+                  value: 3,
+                  message: "用户名至少3个字符",
+                },
               }}
               render={({ field }) => (
                 <Input
                   {...field}
-                  placeholder="请输入您的姓名"
+                  placeholder="请输入用户名"
                   status={errors.name ? "error" : ""}
                 />
               )}
@@ -68,54 +71,59 @@ const Contact: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">邮箱</label>
+            <label className="block text-sm font-medium mb-1">年龄</label>
             <Controller
-              name="email"
+              name="age"
               control={control}
               rules={{
-                required: "请输入邮箱",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "请输入有效的邮箱地址"
-                }
+                required: "请输入年龄",
+                min: {
+                  value: 0,
+                  message: "年龄必须大于0",
+                },
               }}
               render={({ field }) => (
                 <Input
                   {...field}
-                  type="email"
-                  placeholder="请输入您的邮箱"
-                  status={errors.email ? "error" : ""}
+                  type="number"
+                  placeholder="请输入年龄"
+                  status={errors.age ? "error" : ""}
+                  onChange={(e) => {
+                    // 转换为数字类型
+                    const value =
+                      e.target.value === "" ? "" : Number(e.target.value);
+                    field.onChange(value);
+                  }}
                 />
               )}
             />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+            {errors.age && (
+              <p className="text-red-500 text-xs mt-1">{errors.age.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">消息</label>
+            <label className="block text-sm font-medium mb-1">地址</label>
             <Controller
-              name="message"
+              name="address"
               control={control}
               rules={{
-                required: "请输入消息内容",
-                minLength: {
-                  value: 10,
-                  message: "消息内容至少10个字符"
-                }
+                required: "请输入地址",
+                message: "请输入有效的地址",
               }}
               render={({ field }) => (
-                <Input.TextArea
+                <Input
                   {...field}
-                  placeholder="请输入您的消息"
-                  rows={4}
-                  status={errors.message ? "error" : ""}
+                  type="text"
+                  placeholder="请输入您的地址"
+                  status={errors.address ? "error" : ""}
                 />
               )}
             />
-            {errors.message && (
-              <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>
+            {errors.address && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.address.message}
+              </p>
             )}
           </div>
 
@@ -123,10 +131,10 @@ const Contact: React.FC = () => {
             type="primary"
             htmlType="submit"
             block
-            loading={sendMessageMutation.isPending}
+            loading={createUserInfoMutation.isPending}
             className="mt-6"
           >
-            {sendMessageMutation.isPending ? "发送中..." : "发送消息"}
+            {createUserInfoMutation.isPending ? "创建中..." : "创建"}
           </Button>
         </form>
       </Card>

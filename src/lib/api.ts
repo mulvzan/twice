@@ -9,7 +9,6 @@ export interface User {
   avatar?: string;
 }
 export interface UserInfo {
-  key: number;
   name: string;
   age: number;
   address: string;
@@ -88,6 +87,18 @@ export const api = {
 
   getUserInfos: async (): Promise<UserInfo[]> => {
     const response = await fetch("/api/users");
+    const data = await response.json();
+    return data;
+  },
+
+  createUserInfo: async (userInfo: UserInfo): Promise<UserInfo> => {
+    const response = await fetch("/api/newuser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userInfo),
+    });
     const data = await response.json();
     return data;
   },
