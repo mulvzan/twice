@@ -1,5 +1,5 @@
 // 模拟 API 延迟
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 定义数据类型
 export interface User {
@@ -55,20 +55,6 @@ let mockTodos: Todo[] = [
     createdAt: new Date().toISOString(),
   },
 ];
-let mockUserInfo: UserInfo[] = [
-  {
-    key: 1,
-    name: "admin",
-    age: 25,
-    address: "123 Main St",
-  },
-  {
-    key: 2,
-    name: "user",
-    age: 30,
-    address: "456 Elm St",
-  },
-];
 
 let nextTodoId = 3;
 
@@ -84,9 +70,10 @@ export const api = {
           id: 1,
           username: credentials.username,
           email: "admin@example.com",
-          avatar: "https://pbs.twimg.com/profile_images/1640574015516594177/JHuG9Yl6_400x400.jpg"
+          avatar:
+            "https://pbs.twimg.com/profile_images/1640574015516594177/JHuG9Yl6_400x400.jpg",
         },
-        token: "mock-jwt-token"
+        token: "mock-jwt-token",
       };
     }
 
@@ -100,8 +87,9 @@ export const api = {
   },
 
   getUserInfos: async (): Promise<UserInfo[]> => {
-    await delay(500);
-    return [...mockUserInfo];
+    const response = await fetch("http://localhost:3000/users");
+    const data = await response.json();
+    return data;
   },
 
   createTodo: async (title: string): Promise<Todo> => {
@@ -122,7 +110,7 @@ export const api = {
   updateTodo: async (id: number, updates: Partial<Todo>): Promise<Todo> => {
     await delay(300);
 
-    const todoIndex = mockTodos.findIndex(todo => todo.id === id);
+    const todoIndex = mockTodos.findIndex((todo) => todo.id === id);
     if (todoIndex === -1) {
       throw new Error("Todo not found");
     }
@@ -134,7 +122,7 @@ export const api = {
   deleteTodo: async (id: number): Promise<void> => {
     await delay(300);
 
-    const todoIndex = mockTodos.findIndex(todo => todo.id === id);
+    const todoIndex = mockTodos.findIndex((todo) => todo.id === id);
     if (todoIndex === -1) {
       throw new Error("Todo not found");
     }
@@ -143,7 +131,9 @@ export const api = {
   },
 
   // 联系表单
-  sendContactMessage: async (message: ContactMessage): Promise<{ success: boolean }> => {
+  sendContactMessage: async (
+    message: ContactMessage,
+  ): Promise<{ success: boolean }> => {
     await delay(1500);
 
     // 模拟偶尔的失败
@@ -163,7 +153,8 @@ export const api = {
       id,
       username: "admin",
       email: "admin@example.com",
-      avatar: "https://pbs.twimg.com/profile_images/1640574015516594177/JHuG9Yl6_400x400.jpg"
+      avatar:
+        "https://pbs.twimg.com/profile_images/1640574015516594177/JHuG9Yl6_400x400.jpg",
     };
   },
 
@@ -172,6 +163,6 @@ export const api = {
     if (error instanceof Error) {
       return error.message;
     }
-    return '未知错误，请重试';
-  }
+    return "未知错误，请重试";
+  },
 };

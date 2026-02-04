@@ -11,7 +11,7 @@ const GPTPage: React.FC = () => {
       >
         <img
           className={`transition-all ${isRound ? "rounded-full" : ""}`}
-          src="https://pbs.twimg.com/profile_images/1975980371134251009/zr1T2x16.jpg"
+          src=""
         />
 
         <div className=" ">555</div>

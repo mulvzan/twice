@@ -1,6 +1,11 @@
 import { Card, Button, Input, Checkbox, message, Spin, Alert } from "antd";
 import { useForm, Controller } from "react-hook-form";
-import { useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo } from "./hooks/useApi";
+import {
+  useTodos,
+  useCreateTodo,
+  useUpdateTodo,
+  useDeleteTodo,
+} from "./hooks/useApi";
 import { MESSAGES } from "./constants/messages";
 
 // 定义表单数据类型
@@ -19,7 +24,13 @@ const TodoLoading = () => (
 );
 
 // 错误状态组件
-const TodoError = ({ error, onRetry }: { error: Error; onRetry: () => void }) => (
+const TodoError = ({
+  error,
+  onRetry,
+}: {
+  error: Error;
+  onRetry: () => void;
+}) => (
   <div className="h-screen flex justify-center items-center">
     <Alert
       message="加载失败"
@@ -97,12 +108,12 @@ const Todo: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex justify-center">
-      <div className="mt-10 h-fit flex flex-col items-center shadow-lg">
+    <div className="h-screen flex  p-10 ">
+      <div className="h-fit flex flex-col items-center shadow-lg  ">
         <Card>
           <div className="mb-4">
             <div className="flex justify-between items-center mb-4">
-              <h1 className="font-bold">待办事项</h1>
+              <h1 className="font-medium text-xl">待办事项</h1>
               {(createTodoMutation.isPending ||
                 updateTodoMutation.isPending ||
                 deleteTodoMutation.isPending) && (
@@ -162,7 +173,7 @@ const Todo: React.FC = () => {
               todos?.map((todo) => (
                 <li
                   key={todo.id}
-                  className="mb-2 flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                  className="mb-2 flex justify-between items-center p-3  rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <Checkbox
@@ -173,7 +184,7 @@ const Todo: React.FC = () => {
                       }
                     />
                     <span
-                      className={`${
+                      className={`text-md ${
                         todo.done ? "line-through text-gray-500" : ""
                       } ${updateTodoMutation.isPending ? "opacity-50" : ""}`}
                     >
@@ -181,8 +192,9 @@ const Todo: React.FC = () => {
                     </span>
                   </div>
                   <Button
-                    danger
-                    size="small"
+                    color="danger"
+                    variant="filled"
+                    size="middle"
                     loading={deleteTodoMutation.isPending}
                     disabled={updateTodoMutation.isPending}
                     onClick={() => handleDeleteTodo(todo.id)}
