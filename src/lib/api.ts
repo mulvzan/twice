@@ -37,26 +37,6 @@ export interface ContactMessage {
   message: string;
 }
 
-// 模拟数据
-let mockTodos: Todo[] = [
-  {
-    id: 1,
-    title: "学习 React Query",
-    done: false,
-    userId: 1,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    title: "完成项目重构",
-    done: true,
-    userId: 1,
-    createdAt: new Date().toISOString(),
-  },
-];
-
-let nextTodoId = 3;
-
 // API 函数
 export const api = {
   // 认证相关
@@ -79,10 +59,10 @@ export const api = {
     throw new Error("用户名或密码错误");
   },
 
-  // Todo 相关
   getTodos: async (): Promise<Todo[]> => {
-    await delay(500);
-    return [...mockTodos];
+    const response = await fetch("/api/todos");
+    const data = await response.json();
+    return data;
   },
 
   getUserInfos: async (): Promise<UserInfo[]> => {
@@ -104,7 +84,7 @@ export const api = {
   },
 
   createTodo: async (title: string): Promise<Todo> => {
-    await delay(300);
+    const todos = await api.getTodos();
 
     const newTodo: Todo = {
       id: nextTodoId++,
@@ -119,21 +99,21 @@ export const api = {
   },
 
   updateTodo: async (id: number, updates: Partial<Todo>): Promise<Todo> => {
-    await delay(300);
+    const todos = await api.getTodos();
 
-    const todoIndex = mockTodos.findIndex((todo) => todo.id === id);
+    const todoIndex = todos.findIndex((todo) => todo.id === id);
     if (todoIndex === -1) {
       throw new Error("Todo not found");
     }
 
-    mockTodos[todoIndex] = { ...mockTodos[todoIndex], ...updates };
-    return mockTodos[todoIndex];
+    todos[todoIndex] = { ...todos[todoIndex], ...updates };
+    return todos[todoIndex];
   },
 
   deleteTodo: async (id: number): Promise<void> => {
     await delay(300);
 
-    const todoIndex = mockTodos.findIndex((todo) => todo.id === id);
+    const todoIndex = todos.findIndex((todo) => todo.id === id);
     if (todoIndex === -1) {
       throw new Error("Todo not found");
     }
