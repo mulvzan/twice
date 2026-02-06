@@ -81,10 +81,10 @@ const Todo: React.FC = () => {
     }
   };
 
-  const handleToggleTodo = async (id: number, done: boolean) => {
+  const handleToggleTodo = async (id: number, completed: boolean) => {
     try {
-      await updateTodoMutation.mutateAsync({ id, updates: { done } });
-      messageApi.success(done ? "任务已完成" : "任务已重新开启");
+      await updateTodoMutation.mutateAsync({ id, updates: { completed } });
+      messageApi.success(completed ? "任务已完成" : "任务已重新开启");
     } catch (error) {
       messageApi.error(MESSAGES.TODO.ERROR.UPDATE);
     }
@@ -177,7 +177,7 @@ const Todo: React.FC = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Checkbox
-                      checked={todo.done}
+                      checked={todo.completed}
                       disabled={updateTodoMutation.isPending}
                       onChange={(e) =>
                         handleToggleTodo(todo.id, e.target.checked)
@@ -185,7 +185,7 @@ const Todo: React.FC = () => {
                     />
                     <span
                       className={`text-md ${
-                        todo.done ? "line-through text-gray-500" : ""
+                        todo.completed ? "line-through text-gray-500" : ""
                       } ${updateTodoMutation.isPending ? "opacity-50" : ""}`}
                     >
                       {todo.title}

@@ -26,12 +26,12 @@ export const useCreateUserInfo = () => {
   return useMutation({
     mutationFn: api.createUserInfo,
   });
-}
+};
 export const useCreateTodo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (title: string) => api.createTodo({ title }),
+    mutationFn: (title: string) => api.createTodo({ title, completed: false }),
     onSuccess: (newTodo) => {
       // 乐观更新：立即更新缓存
       queryClient.setQueryData<Todo[]>(queryKeys.todos, (oldTodos) => {

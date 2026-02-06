@@ -16,9 +16,7 @@ export interface UserInfo {
 export interface Todo {
   id: number;
   title: string;
-  done: boolean;
-  userId: number;
-  createdAt: string;
+  completed: boolean;
 }
 
 export interface LoginCredentials {
@@ -84,7 +82,7 @@ export const api = {
   },
 
   createTodo: async (todo: Partial<Todo>): Promise<Todo> => {
-    const response = await fetch("/api/todos", {
+    const response = await fetch("/api/newtodo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +96,7 @@ export const api = {
   },
 
   updateTodo: async (id: number, updates: Partial<Todo>): Promise<Todo> => {
-    const response = await fetch(`/api/todos/${id}`, {
+    const response = await fetch(`/api/updatetodo/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +110,7 @@ export const api = {
   },
 
   deleteTodo: async (id: number): Promise<void> => {
-    const response = await fetch(`/api/todos/${id}`, {
+    const response = await fetch(`/api/deletetodo/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
