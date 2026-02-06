@@ -8,13 +8,6 @@ export const queryKeys = {
   userinfos: ["userinfos"] as const,
 };
 
-// Todo 相关 hooks
-export const useTodos = () => {
-  return useQuery({
-    queryKey: queryKeys.todos,
-    queryFn: api.getTodos,
-  });
-};
 export const useUserInfo = () => {
   return useQuery({
     queryKey: queryKeys.userinfos,
@@ -25,6 +18,18 @@ export const useUserInfo = () => {
 export const useCreateUserInfo = () => {
   return useMutation({
     mutationFn: api.createUserInfo,
+    onSuccess: () => {
+      console.log("User info created successfully");
+    },
+    onError: () => {
+      console.log("Failed to create user info");
+    },
+  });
+};
+export const useTodos = () => {
+  return useQuery({
+    queryKey: queryKeys.todos,
+    queryFn: api.getTodos,
   });
 };
 export const useCreateTodo = () => {
@@ -101,25 +106,6 @@ export const useLogin = () => {
         localStorage.setItem("token", data.token as string);
         localStorage.setItem("user", JSON.stringify(data.user));
       }
-    },
-  });
-};
-
-// 用户信息 hooks
-export const useUser = (id: number) => {
-  return useQuery({
-    queryKey: queryKeys.user(id),
-    queryFn: () => api.getUser(id),
-    enabled: !!id, // 只有当 id 存在时才执行查询
-  });
-};
-
-// 联系表单 hooks
-export const useSendContactMessage = () => {
-  return useMutation({
-    mutationFn: api.sendContactMessage,
-    onSuccess: () => {
-      console.log("Contact message sent successfully");
     },
   });
 };
