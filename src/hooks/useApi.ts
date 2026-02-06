@@ -31,7 +31,7 @@ export const useCreateTodo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: api.createTodo,
+    mutationFn: (title: string) => api.createTodo({ title }),
     onSuccess: (newTodo) => {
       // 乐观更新：立即更新缓存
       queryClient.setQueryData<Todo[]>(queryKeys.todos, (oldTodos) => {

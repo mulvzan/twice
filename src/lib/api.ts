@@ -83,42 +83,41 @@ export const api = {
     return data;
   },
 
-  createTodo: async (title: string): Promise<Todo> => {
-    const todos = await api.getTodos();
-
-    const newTodo: Todo = {
-      id: nextTodoId++,
-      title,
-      done: false,
-      userId: 1,
-      createdAt: new Date().toISOString(),
-    };
-
-    mockTodos.push(newTodo);
-    return newTodo;
+  createTodo: async (todo: Partial<Todo>): Promise<Todo> => {
+    const response = await fetch("/api/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(todo),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to create todo");
+    }
+    return response.json();
   },
 
   updateTodo: async (id: number, updates: Partial<Todo>): Promise<Todo> => {
-    const todos = await api.getTodos();
-
-    const todoIndex = todos.findIndex((todo) => todo.id === id);
-    if (todoIndex === -1) {
-      throw new Error("Todo not found");
+    const response = await fetch(`/api/todos/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updates),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update todo");
     }
-
-    todos[todoIndex] = { ...todos[todoIndex], ...updates };
-    return todos[todoIndex];
+    return response.json();
   },
 
   deleteTodo: async (id: number): Promise<void> => {
-    await delay(300);
-
-    const todoIndex = todos.findIndex((todo) => todo.id === id);
-    if (todoIndex === -1) {
-      throw new Error("Todo not found");
+    const response = await fetch(`/api/todos/${id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete todo");
     }
-
-    mockTodos.splice(todoIndex, 1);
   },
 
   // 联系表单
