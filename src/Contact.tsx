@@ -1,13 +1,35 @@
 import { Card, Input, Button, message } from "antd";
+import { Spin, Alert, Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
+
 import { useForm, Controller } from "react-hook-form";
 import { useCreateUserInfo } from "./hooks/useApi";
 import { MESSAGES } from "./constants/messages";
+import { useUserInfo } from "./hooks/useApi";
 
 import type { UserInfo } from "./lib/api";
+const columns: ColumnsType<UserInfo> = [
+  {
+    title: "姓名",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "年龄",
+    dataIndex: "age",
+    key: "age",
+  },
+  {
+    title: "住址",
+    dataIndex: "address",
+    key: "address",
+  },
+];
 
 const Contact: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const createUserInfoMutation = useCreateUserInfo();
+  const { data: userinfos, isLoading, error } = useUserInfo();
 
   const {
     control,
@@ -40,7 +62,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="flex mt-10 justify-center h-screen ">
+    <div className="flex flex-col    h-screen ">
       <Card className="w-full  max-w-md">
         {contextHolder}
         <h1 className="text-xl font-bold mb-6 text-center ">注册用户</h1>
@@ -109,7 +131,6 @@ const Contact: React.FC = () => {
               control={control}
               rules={{
                 required: "请输入地址",
-                message: "请输入有效的地址",
               }}
               render={({ field }) => (
                 <Input
@@ -138,6 +159,19 @@ const Contact: React.FC = () => {
           </Button>
         </form>
       </Card>
+
+      <div className="  mx-2">
+        {isLoading && <Spin />}
+        {error && (
+          <Alert
+            message="加载失败"
+            description={error.message}
+            type="error"
+            showIcon
+          />
+        )}
+        <Table dataSource={userinfos} columns={columns} />
+      </div>
     </div>
   );
 };

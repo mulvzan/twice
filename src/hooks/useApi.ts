@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api, type Todo } from "../lib/api";
-
-// Query Keys - 用于缓存管理
+import { api, type Todo, type UserInfo } from "../lib/api";
+ 
 export const queryKeys = {
   todos: ["todos"] as const,
   user: (id: number) => ["user", id] as const,
@@ -16,13 +15,22 @@ export const useUserInfo = () => {
 };
 
 export const useCreateUserInfo = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: api.createUserInfo,
-    onSuccess: () => {
-      console.log("User info created successfully");
+    onSuccess: (newUserInfo) => {
+      // 乐观更新：立即更新缓存
+      queryClient.setQueryData<UserInfo[]>(
+        queryKeys.userinfos,
+        (oldUserinfos) => {
+          return oldUserinfos ? [...oldUserinfos, newUserInfo] : [newUserInfo];
+        },
+      );
     },
     onError: () => {
-      console.log("Failed to create user info");
+      // 发生错误时重新获取数据
+      queryClient.invalidateQueries({ queryKey: queryKeys.userinfos });
     },
   });
 };

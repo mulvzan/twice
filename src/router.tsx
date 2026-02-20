@@ -4,11 +4,9 @@ import { Spin } from "antd";
 
 const Todo = lazy(() => import("./Todo"));
 const App = lazy(() => import("./App"));
-const Dashboard = lazy(() => import("./Dashboard"));
 const Login = lazy(() => import("./Login"));
 const About = lazy(() => import("./About"));
 const Contact = lazy(() => import("./Contact"));
-const GPTPage = lazy(() => import("./GPTPage"));
 
 function Router() {
   return (
@@ -24,10 +22,9 @@ function Router() {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<App />}>
             <Route index element={<Todo />} />
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/gpt" element={<GPTPage />} />
+
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
         </Routes>

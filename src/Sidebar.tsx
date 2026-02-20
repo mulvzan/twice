@@ -2,8 +2,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import {
   CheckOutlined,
   SettingOutlined,
-  RocketOutlined,
-  SearchOutlined,
   MailOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
@@ -28,16 +26,6 @@ const menuItems: MenuProps["items"] = [
     key: "/contact",
     label: "Contact",
     icon: <MailOutlined />,
-  },
-  {
-    key: "/dashboard",
-    label: "Dashboard",
-    icon: <RocketOutlined />,
-  },
-  {
-    key: "/gpt",
-    label: "GPT",
-    icon: <SearchOutlined />,
   },
 ];
 
